@@ -31,3 +31,43 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 });
 
 
+function readPost(id) {
+    let element = document.querySelectorAll(['div[data-ad-rendering-role="story_message"]'])[id];
+    // open full post text if "See more" button is visible
+    let button = element.querySelector('div[role="button"]');
+    if (button != null) {
+        button.click();
+        element = document.querySelectorAll(['div[data-ad-rendering-role="story_message"]'])[id];
+        button = element.querySelector('div[role="button"]');
+        button.click();
+    }
+    const cloned = element.cloneNode(true);
+    // remove button before getting text
+    if (button != null) button.remove();
+
+    return element.textContent;
+}
+
+function readPost2(id) {
+    let element = document.querySelectorAll(['div[data-ad-rendering-role="story_message"]'])[id];
+    let text = "";
+    // open full post text if "See more" button is visible
+    let button = element.querySelector('div[role="button"]');
+    if (button != null) {
+        const old_button_text = button.textContent;
+        button.click();
+        while (button.textContent == old_button_text) {
+            element = document.querySelectorAll(['div[data-ad-rendering-role="story_message"]'])[id];
+            button = element.querySelector('div[role="button"]');
+        }
+        const cloned = element.cloneNode(true);
+        cloned.querySelector('div[role="button"]').remove();
+        text = cloned.textContent;
+        button.click();
+    } else {
+        text = element.textContent;
+    }
+    return text;
+}
+
+
