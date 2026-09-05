@@ -10,6 +10,12 @@
 
     const user = await client.users.getByUsername("elonmusk");
     console.log(user.name);
+
+    const tposts = document.querySelectorAll['article[dataset-id="tweet"]'];
+
+    tposts.forEach(tp => {
+        tp.style.outline = "2px solid blue"
+    });
     
   </script>
 </html>
