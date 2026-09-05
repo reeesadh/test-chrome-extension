@@ -2,20 +2,4 @@
   <body>
     <h1>Hello Extensions</h1>
   </body>
-  <script>
-    import Emusks from "emusks";
-
-    const client = new Emusks();
-    await client.login("your_auth_token");
-
-    const user = await client.users.getByUsername("elonmusk");
-    console.log(user.name);
-
-    const tposts = document.querySelectorAll(['article[data-testid="tweet"]']);
-
-    tposts.forEach(tp => {
-        tp.style.outline = "2px solid blue";
-    });
-
-  </script>
 </html>
