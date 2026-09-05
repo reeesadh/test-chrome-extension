@@ -6,8 +6,8 @@
   "content_scripts": [
     {
       "matches": [
-        "https://twitter.com/",
-        "https://x.com/"
+        "*://twitter.com/*",
+        "*://x.com/*"
       ],
       "js": [
         "script.js"

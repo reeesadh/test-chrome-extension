@@ -1,3 +1,5 @@
+document.getElementById("highlight-button").addEventListener("click", highlightTweets);
+
 async function highlightTweets() {
   const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
   if (!tab) return;
