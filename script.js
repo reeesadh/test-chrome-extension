@@ -65,9 +65,11 @@ async function readPostText(element) {
 const main = document.querySelector('div[role="main"]');
 const observer = new MutationObserver(async (mutations, obs) => {
     for (const element of document.querySelectorAll(['div[data-ad-rendering-role="story_message"]'])) {
-        const full = element.parentElement.parentElement.parentElement;
-        const header = element.childNodes[1];
-        const content = element.childNodes[2];
+        const parent = element.parentNode;
+        const grandparent = parent.parentNode;
+        const full = grandparent.parentNode;
+        const header = full.childNodes[1];
+        const content = full.childNodes[2];
 
         const text = await readPostText(element);
         header.querySelectorAll(['a[role="link"]']).forEach((link) => {
