@@ -63,4 +63,15 @@ async function readPost(id) {
     return text;
 }
 
+const main = document.querySelector("div[role='main']");
+const observer = new MutationObserver((mutations, obs) => {
+    console.log(mutations);
+});
+const config = { 
+    attributes: true, 
+    childList: true, 
+    subtree: true 
+};
+observer.observe(main, config);
+
 
