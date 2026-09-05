@@ -6,8 +6,8 @@
   "content_scripts": [
     {
       "matches": [
-        "*://twitter.com/*",
-        "*://x.com/*"
+        "*://*.facebook.com/*",
+        "*://facebook.com/*"
       ],
       "js": [
         "script.js"
