@@ -30,8 +30,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     return true; 
 });
 
-async function readPost(id) {
-    let element = document.querySelectorAll(['div[data-ad-rendering-role="story_message"]'])[id];
+async function readPostText(element) {
     let text = "";
     // open full post text if "See more" button is visible
     let button = element.querySelector('div[role="button"]');
@@ -63,9 +62,19 @@ async function readPost(id) {
     return text;
 }
 
-const main = document.querySelector("div[role='main']");
-const observer = new MutationObserver((mutations, obs) => {
-    console.log(mutations);
+const main = document.querySelector('div[role="main"]');
+const observer = new MutationObserver(async (mutations, obs) => {
+    for (const element of document.querySelectorAll(['div[data-ad-rendering-role="story_message"]'])) {
+        const full = element.parentElement.parentElement.parentElement;
+        const header = element.childNodes[1];
+        const content = element.childNodes[2];
+
+        const text = await readPostText(element);
+        header.querySelectorAll(['a[role="link"]']).forEach((link) => {
+            console.log(link.textContent);
+        });
+        console.log(text);
+    }
 });
 const config = { 
     attributes: true, 
