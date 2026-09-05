@@ -3,8 +3,24 @@
   "description": "Base Level Extension",
   "version": "1.0",
   "manifest_version": 3,
+  "content_scripts": [
+    {
+      "matches": [
+        "https://twitter.com/",
+        "https://x.com/"
+      ],
+      "js": [
+        "script.js"
+      ]
+    }
+  ],
+  "permissions": [
+    "tabs",
+    "activeTab",
+    "scripting"
+  ],
   "action": {
-    "default_popup": "wsg.html",
+    "default_popup": "popup.html",
     "default_icon": "pencil.png"
   }
 }
