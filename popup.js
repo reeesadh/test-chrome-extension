@@ -1,5 +1,3 @@
-import emusks from 'https://cdn.jsdelivr.net/npm/emusks@2.3.7/+esm'
-
 async function highlightTweets() {
   const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
   if (!tab) return;
