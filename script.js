@@ -126,6 +126,7 @@ async function processPost(element) {
     const qb = document.createElement('button');
     qb.textContent = "?";
     qb.style.fontSize = "2rem";
+    qb.style.wordWrap = "break-word";
     qb.style.display = "flex";
     qb.style.flexDirection = "column";
     qb.style.justifyContent = "center";
@@ -202,7 +203,7 @@ Research the claims using reliable sources. Distinguish between:
 3. Claims that are factual
 4. Claims
 
-Then give an extremely concise summary of your reasoning in under 50 words, and with enough simplicity for middle school comprehension. List any sources you used to reach your conclusion (this may fall beyond the word limit). Also provide a percentage likelihood if the post is a scam as a number between 0 and 1, where 0 is not a scam at all and 1 is definitely a scam, and then a 10 word maximum statement of why if applicable.
+Then give an extremely concise summary of your reasoning in under 50 words, and with enough simplicity for middle school comprehension. List any sources you used to reach your conclusion (this may fall beyond the word limit). Also provide a percentage likelihood if the post is a scam as a number between 0 and 1, where 0 is not a scam at all and 1 is definitely a scam, and then a 10 word maximum statement of why if applicable. For the medical field, if the post contains any medical related text just set it to "TRUE", or "FALSE" if not. if its true then for the medicallinks field put  2-3 credible links such as studies to learn more about the topic, put each link on a new line, with one blank line between each link.
 Respond with exactly one JSON object of the following format: 
 {
 "summary": the summary of your reasoning,
@@ -210,6 +211,8 @@ Respond with exactly one JSON object of the following format:
 "accuracy": your estimated accuracy of the post,
 "scamlikelypercent": your estimated scam likelihood of the post,
 "scamreason": why the post is a scam if applicable
+"medical": TRUE or FALSE value, TRUE if the post talks about medical content
+"medicallinks": links to studies or credible sources that have actual information about the health topic being discussed
 "backgroundcheck": the person's profession and if they are actually licensed for what they are talking about in 20 words or less, if you cant find accurate info then just say "n/a"
 } 
 "accuracy" should be a number between 0 and 1, where 1 means all significant factual claims are accurate and 0 means none are accurate.
@@ -262,6 +265,8 @@ Post was tagged as AI explicitly.
             scamlikelypercent: 0.0,
             scamlikelyreason: "n/a",
             backgroundcheck: "n/a",
+            medical: "",
+            medicallinks: "",
         };
 
         const qbox = document.createElement('div');
@@ -328,13 +333,29 @@ Post was tagged as AI explicitly.
 
         qbox.appendChild(APB);
         APB.appendChild(AP);
-        //qbox.appendChild(AP);
 
         if (result.scamlikelypercent >= 0.6) {
             const st = document.createElement('div');
             st.textContent = "STOP! THIS POST MAY BE A SCAM: " + result.scamreason;
             st.style.zIndex = "2147483647";
             st.style.color = "red";
+            qbox.appendChild(st);
+        }
+
+        if (result.medical == "TRUE") {
+            const st = document.createElement('div');
+            st.textContent = "THIS POST TALKS ABOUT MEDICAL INFORMATION, HERE ARE SOME CREDIBLE LINKS FOR THIS TOPIC: ";
+            for (let link of result.medicallinks.split('\n')) {
+                link = link.trim();
+                if (link === '') continue;
+                const a = document.createElement('a');
+                a.href = link;
+                a.textContent = link + '\n';
+                st.appendChild(a);
+            }
+            st.style.zIndex = "2147483647";
+            st.style.color = "#0f5913";
+            st.style.wordWrap = "break-word";
             qbox.appendChild(st);
         }
 
