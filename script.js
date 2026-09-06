@@ -131,8 +131,30 @@ async function processPost(element) {
     element.style.backgroundColor = "red";
 
     const qb = document.createElement('div');
-    qb.textContent = "hi";
-    qb.style.position = "absolute";
+    qb.textContent = "?";
+    qb.style.fontSize = "50px";
+    qb.style.color = "blue";
+    qb.style.position = "fixed";
+
+    function inDaClubStraightUpPositioningItAndByItLetsJustrSayMyButton() {
+        const rect = full.getBoundingClientRect();
+        qb.style.top = (rect.top + 10) + "px";
+        qb.style.left = (rect.right + 8) + "px";
+    }
+
+    inDaClubStraightUpPositioningItAndByItLetsJustrSayMyButton();
+
+    qb.style.zIndex = "2147483647";
+
+    window.addEventListener('scroll', inDaClubStraightUpPositioningItAndByItLetsJustrSayMyButton, {passive: true});
+    window.addEventListener('resize', inDaClubStraightUpPositioningItAndByItLetsJustrSayMyButton);
+
+    qb.addEventListener('click', () => {
+        alert(text);
+    });
+    
+    full.style.position = "relative";
+    full.appendChild(qb);
 
     header.querySelectorAll(['a[role="link"]']).forEach((link) => {
         console.log(link.textContent);
