@@ -10,21 +10,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         tweets.forEach(tweet => {
             tweet.style.position = "relative";
             sendResponse({ reply: "Daughter :sob: :sob: :sob:"});
-            const secretButton = document.createElement('div');
-            secretButton.style.position = "absolute";
-            secretButton.textContent = "?";
-            secretButton.style.fontSize = "24px";
-            secretButton.style.fontFamily = "Aldrich";
-            secretButton.style.fontWeight = "bold";
-            secretButton.style.color = "#1f27cc";
-            secretButton.style.top = "1%";
-            secretButton.style.left = "85%";
-            secretButton.addEventListener('click', () => {
-                alert("say wallahi bro");
-            });
-            tweet.appendChild(secretButton);
         });
-      
     }
 
     return true; 
@@ -128,7 +114,7 @@ async function processPost(element) {
     console.log("ELEMENT: " + element);
     console.log("POSITION: " + element.style.top);
 
-    element.style.backgroundColor = "red";
+    //element.style.backgroundColor = "red";
 
     const qb = document.createElement('div');
     qb.textContent = "?";
@@ -144,15 +130,50 @@ async function processPost(element) {
 
     inDaClubStraightUpPositioningItAndByItLetsJustrSayMyButton();
 
-    qb.style.zIndex = "2147483647";
+    qb.style.zIndex = "2147483646";
 
     window.addEventListener('scroll', inDaClubStraightUpPositioningItAndByItLetsJustrSayMyButton, {passive: true});
     window.addEventListener('resize', inDaClubStraightUpPositioningItAndByItLetsJustrSayMyButton);
 
     qb.addEventListener('click', () => {
-        alert(text);
+        //alert(text);
+
+
+        const qbox = document.createElement('div');
+        qbox.textContent = text;
+        qbox.style.fontSize = "20px";
+        qbox.style.backgroundColor = "#c8d1d9";
+        qbox.style.width = "260px";
+        qbox.style.height = "400px";
+        qbox.style.borderRadius = "14px";
+        qbox.style.color = "gray";
+        qbox.style.padding = "6px";
+        qbox.style.position = "fixed";
+        qbox.style.zIndex = "2147483647";
+
+        const img = document.createElement('img');
+        img.src = "snoopy_text_logo.png";
+        img.alt = "question"
+        img.style.zIndex = "2147483647";
+        img.style.width = "30px";
+        img.style.height = "30px";
+        qb.appendChild(img);
+
+        function inDaClubStraightUpPositioningItAndByItLetsJustrSayMyButton() {
+            const rect = full.getBoundingClientRect();
+            qbox.style.top = (rect.top + -2) + "px";
+            qbox.style.left = (rect.right + 8) + "px";
+        }
+
+        inDaClubStraightUpPositioningItAndByItLetsJustrSayMyButton();
+
+        full.style.position = "relative";
+        full.appendChild(qbox);
+
+        window.addEventListener('scroll', inDaClubStraightUpPositioningItAndByItLetsJustrSayMyButton, {passive: true});
+        window.addEventListener('resize', inDaClubStraightUpPositioningItAndByItLetsJustrSayMyButton);
     });
-    
+
     full.style.position = "relative";
     full.appendChild(qb);
 
@@ -182,11 +203,6 @@ async function runUpdate() {
             element.dataset.watching = "true";
             visibilityObserver.observe(element);
         }
-        // try {
-        //     await processPost(element);
-        // } catch (e) {
-        //     console.error(e);
-        // }
     }
 }
 
