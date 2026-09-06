@@ -86,6 +86,11 @@ function getId(header) {
 
     return null;
 }
+//get visual length of alt text
+function getVisualLength(str) {
+  const segmenter = new Intl.Segmenter();
+  return [...segmenter.segment(str)].length;
+}
 
 // get post text
 async function processPost(element) {
@@ -93,7 +98,22 @@ async function processPost(element) {
     const mainMainNode = mainNode?.parentNode;
     const full = mainMainNode?.parentNode;
     const header = full?.childNodes?.[1];
+    
+    let images = Array.from(mainMainNode?.childNodes?.[1].querySelectorAll('img'));
 
+    if (images) {
+        const filteredImages = images.filter((image) => {
+        const altText = image.alt;
+        const len = getVisualLength(altText)
+        console.log("alttext" + altText + " lenght: " + len)
+        
+        if (!altText || len > 1) {
+            return true
+        }
+        return false
+        });
+    }
+    
     if (!header) return;
 
     const pId = getId(header);
