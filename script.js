@@ -122,6 +122,29 @@ async function processPost(element) {
     qb.style.color = "blue";
     qb.style.position = "fixed";
 
+    const baseInstructions = `Infer the main claims of the following post, and determine the overall factual accuracy of the post.
+
+Research the claims using reliable sources. Distinguish between:
+
+1. Claims that are demonstrably false
+2. Claims that are misleading or unsupported
+3. Claims that are factual
+4. Claims
+
+Then give a concise summary of your reasoning in under 200 words, and with enough simplicity for middle school comprehension. List any sources you used to reach your conclusion (this may fall beyond the word limit)
+Respond with exactly one JSON object of the following format: 
+{
+"summary": the summary of your reasoning,
+"sources": [the titles of your sources],
+"accuracy": your estimated accuracy of the post
+} 
+"accuracy" should be a number between 0 and 1, where 1 means all significant factual claims are accurate and 0 means none are accurate.
+
+Post:
+`
+    
+
+
     function inDaClubStraightUpPositioningItAndByItLetsJustrSayMyButton() {
         const rect = full.getBoundingClientRect();
         qb.style.top = (rect.top + 10) + "px";
@@ -135,12 +158,23 @@ async function processPost(element) {
     window.addEventListener('scroll', inDaClubStraightUpPositioningItAndByItLetsJustrSayMyButton, {passive: true});
     window.addEventListener('resize', inDaClubStraightUpPositioningItAndByItLetsJustrSayMyButton);
 
-    qb.addEventListener('click', () => {
-        //alert(text);
+    qb.addEventListener('click', async () => {
+        const extractedText = baseInstructions + text;
+
+        const result = await chrome.runtime.sendMessage({
+        type: "OPENROUTER_REQUEST",
+        prompt: extractedText
+        });
+
+        if (result.success) {
+        console.log(result.content);
+
+        }
+//         alert(result.content);
 
 
         const qbox = document.createElement('div');
-        qbox.textContent = text;
+        qbox.textContent = result.content;
         qbox.style.fontSize = "20px";
         qbox.style.backgroundColor = "#c8d1d9";
         qbox.style.width = "260px";
