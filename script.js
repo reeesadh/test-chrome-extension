@@ -114,13 +114,15 @@ async function processPost(element) {
     console.log("ELEMENT: " + element);
     console.log("POSITION: " + element.style.top);
 
-    //element.style.backgroundColor = "red";
-
     const qb = document.createElement('div');
     qb.textContent = "?";
-    qb.style.fontSize = "50px";
-    qb.style.color = "blue";
+    qb.style.fontSize = "3rem";
+    qb.style.color = "black";
     qb.style.position = "fixed";
+    qb.style.backgroundColor = "white";
+    qb.style.borderRadius = "0.75rem";
+    qb.style.padding = "0.5rem";
+    qb.style.boxShadow = "0px 2px 2px rgba(0, 0, 0, 0.5)";
 
     const baseInstructions = `Infer the main claims of the following post, and determine the overall factual accuracy of the post.
 
@@ -142,8 +144,6 @@ Respond with exactly one JSON object of the following format:
 
 Post:
 `
-    
-
 
     function inDaClubStraightUpPositioningItAndByItLetsJustrSayMyButton() {
         const rect = full.getBoundingClientRect();
@@ -180,13 +180,13 @@ Post:
 
         const qbox = document.createElement('div');
         qbox.textContent = result.summary;
-        qbox.style.fontSize = "20px";
-        qbox.style.backgroundColor = "#c8d1d9";
-        qbox.style.width = "260px";
-        qbox.style.height = "400px";
-        qbox.style.borderRadius = "14px";
-        qbox.style.color = "gray";
-        qbox.style.padding = "6px";
+        qbox.style.backgroundColor = "white";
+        qbox.style.width = "16rem";
+        qbox.style.height = "25rem";
+        qbox.style.borderRadius = "0.75rem";
+        qbox.style.color = "black";
+        qbox.style.boxShadow = "0px 2px 2px rgba(0, 0, 0, 0.5)";
+        qbox.style.padding = "0.5rem";
         qbox.style.position = "fixed";
         qbox.style.zIndex = "2147483647";
 
@@ -248,7 +248,6 @@ async function runUpdate() {
 const observer = new MutationObserver(async (mutations, obs) => {
     scheduleUpdate();
 });
-
 const visibilityObserver = new IntersectionObserver((entries, obs) => {
     for (const en of entries) {
         if (en.isIntersecting) {
@@ -262,13 +261,11 @@ const visibilityObserver = new IntersectionObserver((entries, obs) => {
         threshold: 0.1
     }
 );
-
 const config = { 
     attributes: true, 
     childList: true, 
     subtree: true 
 };
-
 observer.observe(main, config);
 
 
