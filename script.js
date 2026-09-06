@@ -249,7 +249,15 @@ Post:
         qbox.appendChild(APB);
         qbox.appendChild(AP);
 
-        
+        if (result.scam-likely-percent >= 0.6) {
+            const st = document.createElement('div');
+            st.textContent = "STOP! THIS POST MAY BE A SCAM: " + result.scam-reason;
+            st.style.fontSize = "0.9375rem";
+            st.style.color = "black";
+            st.style.padding = "0.5rem";
+            st.style.zIndex = "2147483647";
+            qbox.appendChild(st);
+        }
 
         function inDaClubStraightUpPositioningItAndByItLetsJustrSayMyButton() {
             const rect = full.getBoundingClientRect();
