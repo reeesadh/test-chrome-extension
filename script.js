@@ -130,12 +130,14 @@ Research the claims using reliable sources. Distinguish between:
 3. Claims that are factual
 4. Claims
 
-Then give an extremely concise summary of your reasoning in under 50 words, and with enough simplicity for middle school comprehension. List any sources you used to reach your conclusion (this may fall beyond the word limit)
+Then give an extremely concise summary of your reasoning in under 50 words, and with enough simplicity for middle school comprehension. List any sources you used to reach your conclusion (this may fall beyond the word limit). Also provide a percentage likelihood if the post is a scam as a number between 0 and 1, where 0 is not a scam at all and 1 is definitely a scam, and then a 10 word maximum statement of why if applicable.
 Respond with exactly one JSON object of the following format: 
 {
 "summary": the summary of your reasoning,
 "sources": [the titles of your sources],
-"accuracy": your estimated accuracy of the post
+"accuracy": your estimated accuracy of the post,
+"scam-likely-percent": your estimated scam likelihood of the post,
+"scam-reason": why the post is a scam if applicable
 } 
 "accuracy" should be a number between 0 and 1, where 1 means all significant factual claims are accurate and 0 means none are accurate.
 
