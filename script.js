@@ -165,7 +165,7 @@ async function processPost(element) {
                 type: "SE_REQUEST",
                 image: imageObj.src
             });
-            let parsedAIPercent = parseInt(SEResult.content);
+            let parsedAIPercent = parseFloat(SEResult.content);
             AITotal += parsedAIPercent;
         }
         const AIPercent = AITotal / filteredImages.length;
@@ -348,18 +348,22 @@ Post was tagged as AI explicitly.
         if (result.medical == "TRUE") {
             const st = document.createElement('div');
             st.textContent = "THIS POST TALKS ABOUT MEDICAL INFORMATION, HERE ARE SOME CREDIBLE LINKS FOR THIS TOPIC: ";
-            for (let link of result.medicallinks.split('\n')) {
-                link = link.trim();
-                if (link === '') continue;
-                const a = document.createElement('a');
-                a.href = link;
-                a.textContent = link + '\n';
-                st.appendChild(a);
+            let links = result.medicallinks;
+            if (typeof links === 'string') links = links.split('\n');
+            if (Array.isArray(links)) {
+                for (let link of links) {
+                    link = link.trim();
+                    if (link === '') continue;
+                    const a = document.createElement('a');
+                    a.href = link;
+                    a.textContent = link + '\n';
+                    st.appendChild(a);
+                }
+                st.style.zIndex = "2147483647";
+                st.style.color = "#0f5913";
+                st.style.wordWrap = "break-word";
+                qbox.appendChild(st);
             }
-            st.style.zIndex = "2147483647";
-            st.style.color = "#0f5913";
-            st.style.wordWrap = "break-word";
-            qbox.appendChild(st);
         }
 
         const st1 = document.createElement('div');
