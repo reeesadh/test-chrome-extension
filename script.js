@@ -138,6 +138,7 @@ Respond with exactly one JSON object of the following format:
 "accuracy": your estimated accuracy of the post,
 "scam-likely-percent": your estimated scam likelihood of the post,
 "scam-reason": why the post is a scam if applicable
+"background-check": the person's profession and if they are actually licensed for what they are talking about in 20 words or less, if you cant find accurate info then just say "n/a"
 } 
 "accuracy" should be a number between 0 and 1, where 1 means all significant factual claims are accurate and 0 means none are accurate.
 
@@ -258,6 +259,14 @@ Post:
             st.style.zIndex = "2147483647";
             qbox.appendChild(st);
         }
+
+        const bgc = document.createElement('div');
+        bgc.textContent = result.background-check;
+        bgc.style.fontSize = "0.9375rem";
+        bgc.style.color = "black";
+        bgc.style.padding = "0.5rem";
+        bgc.style.zIndex = "2147483647";
+        qbox.appendChild(bgc);
 
         function inDaClubStraightUpPositioningItAndByItLetsJustrSayMyButton() {
             const rect = full.getBoundingClientRect();
