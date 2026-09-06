@@ -174,7 +174,7 @@ async function processPost(element) {
         profile_dirty.search = '';
         const profile = profile_dirty.toString();
 
-        const prompt = `Infer the main claims of the following post, and determine the overall factual accuracy of the post.
+        let prompt = `Infer the main claims of the following post, and determine the overall factual accuracy of the post.
 
 Research the claims using reliable sources. Distinguish between:
 
