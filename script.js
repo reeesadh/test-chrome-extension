@@ -183,7 +183,6 @@ async function processPost(element) {
         const other_links_upper_div = profile_elem_upper_div?.parentNode?.parentNode?.parentNode?.childNodes?.[1];
         const other_links = other_links_upper_div.querySelectorAll('a');
         const maybe_profile = other_links[0];
-        const date = other_links[other_links.length - 1].textContent;
         
         let group_name = '';
         let group_link = '';
@@ -193,6 +192,12 @@ async function processPost(element) {
             profile_name = maybe_profile.textContent;
             profile_link = cleanURL(maybe_profile.href);
         }
+
+        const date_idx = 0;
+        if (group_name !== '') date_idx += 1;
+        const explicit_ai = other_links[date_idx].textContent.indexOf('AI') === 0;
+        if (explicit_ai) date_idx += 1;
+        const date = other_links[date_idx].textContent;
 
         let prompt = `Infer the main claims of the following post, and determine the overall factual accuracy of the post.
 
@@ -239,6 +244,12 @@ Group Link: ${group_link}
 ${filteredImages.length} image(s) were attached, with ${AIPercent}% likelihood of being AI-generated.
 Currently we cannot route images to you, so only include this metric in your decision if you know it may be relevant despite not seeing them.
 `
+        }
+
+        if (explicit_ai) {
+            prompt += `
+Post was tagged as AI explicitly.
+`;
         }
 
         console.log(prompt);
