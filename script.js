@@ -104,9 +104,6 @@ async function processPost(element) {
         if (element.dataset.scanned) return;
     }
 
-    console.log("ELEMENT: " + element);
-    console.log("POSITION: " + element.style.top);
-
     const qb = document.createElement('button');
     qb.textContent = "?";
     qb.style.fontSize = "2rem";
@@ -176,8 +173,6 @@ Post:
             return JSON.parse(cleaned)
         }
 
-        console.log(result.content);
-
         result = result.success ? parseRes(result.content) : {
             summary: "API request failed!",
             sources: [],
@@ -206,7 +201,6 @@ Post:
 
         const AP = document.createElement('div');
         AP.textContent = result.accuracy * 100 + "%";
-        console.log(result.accuracy);
         AP.style.fontSize = "50px";
         AP.style.zIndex = "2147483647";
         AP.style.backgroundColor = "red";
@@ -243,12 +237,6 @@ Post:
 
     full.style.position = "relative";
     full.appendChild(qb);
-
-    header.querySelectorAll(['a[role="link"]']).forEach((link) => {
-        console.log(link.textContent);
-    });
-    
-    console.log("POST TEXT: " + text);
 
     if (pId) {
         alreadyProcessed.add(pId);
