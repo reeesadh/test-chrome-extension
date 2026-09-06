@@ -231,9 +231,7 @@ Group Link: ${group_link}
 
         if (filteredImages.length > 0) {
             prompt += `
-${filteredImages.length} image(s) were attached, with ${AIPercent}% likelihood of being AI-generated.
-Currently we cannot route images to you, so only include this metric in your decision if you know it may be relevant despite not seeing them.
-`
+${filteredImages.length} image(s) were attached, with average ${AIPercent}% likelihood of being AI-generated. You should also be able to view these yourself.`
         }
 
         if (explicit_ai) {
@@ -244,9 +242,11 @@ Post was tagged as AI explicitly.
 
         console.log(prompt);
 
+        images = filteredImages.map((img) => img.src);
         let result = await chrome.runtime.sendMessage({
             type: "OPENROUTER_REQUEST",
             prompt,
+            images,
         });
 
         function parseRes(content) {

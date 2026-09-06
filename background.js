@@ -6,6 +6,17 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.type == "OPENROUTER_REQUEST") {
     (async () => {
       try {
+        const content = [{
+          type: 'text',
+          text: message.prompt,
+        }];
+        for (const img of message.images) {
+          content.push({
+            type: 'image_url',
+            imageUrl: { url: 'img' },
+          });
+        }
+
         const response = await fetch(
           "https://openrouter.ai/api/v1/chat/completions",
           {
@@ -19,7 +30,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
               messages: [
                 {
                   role: "user",
-                  content: message.prompt
+                  content,
                 }
               ],
               response_format: {
