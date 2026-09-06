@@ -194,6 +194,9 @@ async function processPost(element) {
             profile_link = cleanURL(maybe_profile.href);
         }
 
+        let ai_idx = group_name === '' ? 0 : 1;
+        let explicit_ai = other_links[ai_idx].textContent.indexOf('AI') === 0;
+
         let prompt = `Infer the main claims of the following post, and determine the overall factual accuracy of the post.
 
 Research the claims using reliable sources. Distinguish between:
