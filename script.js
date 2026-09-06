@@ -100,12 +100,11 @@ async function processPost(element) {
     const header = full?.childNodes?.[1];
     
     let images = Array.from(mainMainNode?.childNodes?.[1].querySelectorAll('img'));
-
+    let filteredImages= []
     if (images) {
-        const filteredImages = images.filter((image) => {
+        filteredImages = images.filter((image) => {
         const altText = image.alt;
         const len = getVisualLength(altText)
-        console.log("alttext" + altText + " lenght: " + len)
         
         if (!altText || len > 1) {
             return true
@@ -177,7 +176,7 @@ Post:
 
     window.addEventListener('scroll', inDaClubStraightUpPositioningItAndByItLetsJustrSayMyButton, {passive: true});
     window.addEventListener('resize', inDaClubStraightUpPositioningItAndByItLetsJustrSayMyButton);
-
+    
     qb.addEventListener('click', async () => {
         qb.textContent = "Loading...";
 
@@ -201,13 +200,17 @@ Post:
             sources: [],
             accuracy: 0.0,
         };
+        
+        filteredImages.forEach(async (imageObj) => {
 
-        let SEResult = await chrome.runtime.sendMessage({
-            type: "SE_REQUEST",
-            image: "https://scontent-sea1-1.xx.fbcdn.net/v/t39.30808-6/792137854_10234952994352161_5810988319788608012_n.jpg?stp=cp6_dst-jpg_tt6&cstp=mx1536x2048&ctp=s1536x2048&_nc_cat=104&ccb=1-7&_nc_sid=aa7b47&_nc_ohc=g4JbvRQJ6igQ7kNvwEtqrka&_nc_oc=Adrq839s5DHfwSQ1g0FGQTJYBTibxuMMvPzrSk9MtbSZ1P8qOx0zPFsXKWcTPgf9ZyE&_nc_zt=23&_nc_ht=scontent-sea1-1.xx&_nc_gid=6GHqQhiPo-hj6osbM0bhNw&_nc_ss=7b2a8&oh=00_AQKrW4NI6q3vTLLi690ogzDCcIi17hJqMEHJM32iH3LMYw&oe=6AA27F77"
+            let SEResult = await chrome.runtime.sendMessage({
+                type: "SE_REQUEST",
+                image: imageObj.src
+            })
+    
+            console.log("Percent AI: " + (parseInt(SEResult.content)))
         })
-
-        console.log(SEResult)
+        
 
         const qbox = document.createElement('div');
         //qbox.textContent = result.summary;
