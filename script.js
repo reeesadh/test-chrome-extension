@@ -131,7 +131,7 @@ Research the claims using reliable sources. Distinguish between:
 3. Claims that are factual
 4. Claims
 
-Then give a concise summary of your reasoning in under 200 words, and with enough simplicity for middle school comprehension. List any sources you used to reach your conclusion (this may fall beyond the word limit)
+Then give an extremely concise summary of your reasoning in under 100 words, and with enough simplicity for middle school comprehension. List any sources you used to reach your conclusion (this may fall beyond the word limit)
 Respond with exactly one JSON object of the following format: 
 {
 "summary": the summary of your reasoning,
@@ -168,7 +168,6 @@ Post:
 
         if (result.success) {
         console.log(result.content);
-
         }
 //         alert(result.content);
 
@@ -186,11 +185,11 @@ Post:
         qbox.style.zIndex = "2147483647";
 
         const img = document.createElement('img');
-        img.src = "snoopy_text_logo.png";
+        img.src = "https://snoopy.basil.moe/logo.png";
         img.alt = "question"
         img.style.zIndex = "2147483647";
-        img.style.width = "30px";
-        img.style.height = "30px";
+        img.style.width = "200px";
+        img.style.height = "100px";
         qbox.appendChild(img);
 
         function inDaClubStraightUpPositioningItAndByItLetsJustrSayMyButton() {
