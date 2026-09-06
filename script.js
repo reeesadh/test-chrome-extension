@@ -161,19 +161,25 @@ Post:
     qb.addEventListener('click', async () => {
         const extractedText = baseInstructions + text;
 
-        const result = await chrome.runtime.sendMessage({
+        let result = await chrome.runtime.sendMessage({
         type: "OPENROUTER_REQUEST",
         prompt: extractedText
         });
 
-        if (result.success) {
-        console.log(result.content);
+        function parseRes(content) {
+            let cleaned = content.trim();
+        
+            cleaned = cleaned.replace(/^```(?:json)?\s*/i, "").replace(/\s*```$/i, "")
+            return JSON.parse(cleaned)
         }
-//         alert(result.content);
 
+        console.log(result.content);
+
+        result = result.success ? parseRes(result.content) : null;
+        if (result == null) console.log("ah hell naw");
 
         const qbox = document.createElement('div');
-        qbox.textContent = result.content;
+        qbox.textContent = result.summary;
         qbox.style.fontSize = "20px";
         qbox.style.backgroundColor = "#c8d1d9";
         qbox.style.width = "260px";

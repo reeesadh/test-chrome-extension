@@ -1,4 +1,4 @@
-const OPENROUTER_API_KEY = "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";
+const OPENROUTER_API_KEY = "";
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.type !== "OPENROUTER_REQUEST") {
