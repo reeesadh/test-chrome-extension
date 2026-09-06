@@ -183,36 +183,37 @@ Post:
         const text = await readPostText(element);
         const extractedText = baseInstructions + text;
 
-        let result = await chrome.runtime.sendMessage({
-            type: "OPENROUTER_REQUEST",
-            prompt: extractedText
-        });
+        // let result = await chrome.runtime.sendMessage({
+        //     type: "OPENROUTER_REQUEST",
+        //     prompt: extractedText
+        // });
 
-        function parseRes(content) {
-            let cleaned = content.trim();
+        // function parseRes(content) {
+        //     let cleaned = content.trim();
         
-            cleaned = cleaned.replace(/^```(?:json)?\s*/i, "").replace(/\s*```$/i, "")
-            return JSON.parse(cleaned)
-        }
+        //     cleaned = cleaned.replace(/^```(?:json)?\s*/i, "").replace(/\s*```$/i, "")
+        //     return JSON.parse(cleaned)
+        // }
 
-        result = result.success ? parseRes(result.content) : {
-            summary: "API request failed!",
-            sources: [],
-            accuracy: 0.0,
-            scamlikelypercent: 0.0,
-            scamlikelyreason: "n/a",
-            backgroundcheck: "n/a",
-        };
-        
-        filteredImages.forEach(async (imageObj) => {
-
+        // result = result.success ? parseRes(result.content) : {
+        //     summary: "API request failed!",
+        //     sources: [],
+        //     accuracy: 0.0,
+        //     scamlikelypercent: 0.0,
+        //     scamlikelyreason: "n/a",
+        //     backgroundcheck: "n/a",
+        // };
+        let AITotal = 0
+        for (const imageObj of filteredImages) {
             let SEResult = await chrome.runtime.sendMessage({
                 type: "SE_REQUEST",
                 image: imageObj.src
             })
-    
-            console.log("Percent AI: " + (parseInt(SEResult.content)))
-        })
+            let parsedAIPercent = parseInt(SEResult.content)
+            AITotal += parsedAIPercent
+            console.log("Percent AI: " + parsedAIPercent)
+        }
+        const AIPercent = AITotal / filteredImages.length;
         
 
         const qbox = document.createElement('div');
