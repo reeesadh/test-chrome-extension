@@ -193,12 +193,6 @@ async function processPost(element) {
             profile_link = cleanURL(maybe_profile.href);
         }
 
-        const date_idx = 0;
-        if (group_name !== '') date_idx += 1;
-        const explicit_ai = other_links[date_idx].textContent.indexOf('AI') === 0;
-        if (explicit_ai) date_idx += 1;
-        const date = other_links[date_idx].textContent;
-
         let prompt = `Infer the main claims of the following post, and determine the overall factual accuracy of the post.
 
 Research the claims using reliable sources. Distinguish between:
@@ -221,10 +215,6 @@ Respond with exactly one JSON object of the following format:
 "accuracy" should be a number between 0 and 1, where 1 means all significant factual claims are accurate and 0 means none are accurate.
 
 Post: ${text}
-
-Post Date: ${date}
-
-Current Date: ${Date.now().toLocaleString()}
 
 User Name: ${profile_name}
 
