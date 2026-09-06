@@ -114,13 +114,22 @@ async function processPost(element) {
     console.log("ELEMENT: " + element);
     console.log("POSITION: " + element.style.top);
 
-    //element.style.backgroundColor = "red";
-
-    const qb = document.createElement('div');
+    const qb = document.createElement('button');
     qb.textContent = "?";
-    qb.style.fontSize = "50px";
-    qb.style.color = "blue";
+    qb.style.fontSize = "2rem";
+    qb.style.display = "flex";
+    qb.style.flexDirection = "column";
+    qb.style.justifyContent = "center";
+    qb.style.textAlign = "center";
+    qb.style.width = "3rem";
+    qb.style.height = "3rem";
+    qb.style.color = "#65686C";
     qb.style.position = "fixed";
+    qb.style.backgroundColor = "white";
+    qb.style.borderRadius = "0.75rem";
+    qb.style.boxShadow = "0px 1px 2px rgba(0, 0, 0, 0.25)";
+    qb.style.outline = "none";
+    qb.style.border = "none";
 
     const baseInstructions = `Infer the main claims of the following post, and determine the overall factual accuracy of the post.
 
@@ -142,13 +151,11 @@ Respond with exactly one JSON object of the following format:
 
 Post:
 `
-    
-
 
     function inDaClubStraightUpPositioningItAndByItLetsJustrSayMyButton() {
         const rect = full.getBoundingClientRect();
-        qb.style.top = (rect.top + 10) + "px";
-        qb.style.left = (rect.right + 8) + "px";
+        qb.style.top = rect.top + "px";
+        qb.style.left = (rect.right + 12) + "px";
     }
 
     inDaClubStraightUpPositioningItAndByItLetsJustrSayMyButton();
@@ -159,28 +166,39 @@ Post:
     window.addEventListener('resize', inDaClubStraightUpPositioningItAndByItLetsJustrSayMyButton);
 
     qb.addEventListener('click', async () => {
+        console.log("yo");
+
         const extractedText = baseInstructions + text;
 
-        const result = await chrome.runtime.sendMessage({
+        let result = await chrome.runtime.sendMessage({
         type: "OPENROUTER_REQUEST",
         prompt: extractedText
         });
 
-        if (result.success) {
-        console.log(result.content);
+        function parseRes(content) {
+            let cleaned = content.trim();
+        
+            cleaned = cleaned.replace(/^```(?:json)?\s*/i, "").replace(/\s*```$/i, "")
+            return JSON.parse(cleaned)
         }
-//         alert(result.content);
 
+        console.log(result.content);
+
+        result = result.success ? parseRes(result.content) : {
+            summary: "API request failed!",
+            sources: [],
+            accuracy: 0.0,
+        };
 
         const qbox = document.createElement('div');
-        qbox.textContent = result.content;
-        qbox.style.fontSize = "20px";
-        qbox.style.backgroundColor = "#c8d1d9";
-        qbox.style.width = "260px";
-        qbox.style.height = "400px";
-        qbox.style.borderRadius = "14px";
-        qbox.style.color = "gray";
-        qbox.style.padding = "6px";
+        qbox.textContent = result.summary;
+        qbox.style.backgroundColor = "white";
+        qbox.style.fontSize = "0.9375rem";
+        qbox.style.width = "16rem";
+        qbox.style.borderRadius = "0.75rem";
+        qbox.style.color = "black";
+        qbox.style.boxShadow = "0px 1px 2px rgba(0, 0, 0, 0.25)";
+        qbox.style.padding = "0.5rem";
         qbox.style.position = "fixed";
         qbox.style.zIndex = "2147483647";
 
@@ -194,8 +212,8 @@ Post:
 
         function inDaClubStraightUpPositioningItAndByItLetsJustrSayMyButton() {
             const rect = full.getBoundingClientRect();
-            qbox.style.top = (rect.top + -2) + "px";
-            qbox.style.left = (rect.right + 8) + "px";
+            qbox.style.top = rect.top + "px";
+            qbox.style.left = (rect.right + 12) + "px";
         }
 
         inDaClubStraightUpPositioningItAndByItLetsJustrSayMyButton();
@@ -242,7 +260,6 @@ async function runUpdate() {
 const observer = new MutationObserver(async (mutations, obs) => {
     scheduleUpdate();
 });
-
 const visibilityObserver = new IntersectionObserver((entries, obs) => {
     for (const en of entries) {
         if (en.isIntersecting) {
@@ -256,13 +273,11 @@ const visibilityObserver = new IntersectionObserver((entries, obs) => {
         threshold: 0.1
     }
 );
-
 const config = { 
     attributes: true, 
     childList: true, 
     subtree: true 
 };
-
 observer.observe(main, config);
 
 
