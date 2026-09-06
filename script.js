@@ -156,6 +156,8 @@ async function processPost(element) {
     qb.addEventListener('click', async () => {
         qb.textContent = "Loading...";
 
+        const text = await readPostText(element);
+
         let AITotal = 0
         for (const imageObj of filteredImages) {
             let SEResult = await chrome.runtime.sendMessage({
@@ -167,7 +169,6 @@ async function processPost(element) {
         }
         const AIPercent = AITotal / filteredImages.length;
 
-        const text = await readPostText(element);
         const profile_elem = header.querySelector('div[data-ad-rendering-role="profile_name"] a');
         const name = profile_elem.textContent;
         const profile_dirty = new URL(profile_elem.href);
@@ -229,7 +230,6 @@ Currently we cannot route images to you, so only include this metric in your dec
         };
 
         const qbox = document.createElement('div');
-        qbox.textContent = result.summary;
         qbox.style.backgroundColor = "white";
         qbox.style.fontSize = "0.9375rem";
         qbox.style.width = "16rem";
@@ -239,42 +239,39 @@ Currently we cannot route images to you, so only include this metric in your dec
         qbox.style.padding = "0.5rem";
         qbox.style.position = "fixed";
         qbox.style.zIndex = "2147483647";
+        qbox.style.display = "flex";
+        qbox.style.flexDirection = "column";
+        qbox.style.gap = "0.5rem";
 
         const qbtext = document.createElement('div');
         qbtext.textContent = result.summary;
-        qbtext.style.fontSize = "0.9375rem";
-        qbtext.style.color = "black";
-        qbtext.style.padding = "0.5rem";
-        qbtext.style.zIndex = "2147483647";
 
         const img = document.createElement('img');
         img.src = "https://snoopy.basil.moe/logo.png";
         img.alt = "question"
         img.style.zIndex = "2147483647";
-        img.style.width = "200px";
-        img.style.height = "100px";
+        img.style.width = "100%";
+        img.style.margin = "-1rem 0";
 
         const APB = document.createElement('div');
-        APB.style.fontSize = "50px";
+        APB.style.fontSize = "3rem";
         APB.style.zIndex = "2147483647";
         APB.style.backgroundColor = "#89a9cc";
         APB.style.width = "240px";
         APB.style.height = "40px";
         APB.style.borderRadius = "10px";
-        APB.style.position = "absolute";
-        APB.style.margin = "5px";
+        APB.style.position = "relative";
 
         const AP = document.createElement('div');
         AP.textContent = result.accuracy * 100 + "%";
         AP.style.textAlign = "center";
-        AP.style.fontSize = "26px";
+        AP.style.fontSize = "20px";
         AP.style.zIndex = "2147483647";
         AP.style.borderRadius = "10px";
         AP.style.backgroundColor = "#0064D1";
         AP.style.width = 240*result.accuracy + "px";
         AP.style.height = "40px";
-        AP.style.position = "relative";
-        AP.style.margin = "5px";
+        AP.style.position = "absolute";
 
         if (result.accuracy >= 0.50) {
             APB.style.backgroundColor = "#abc9a9";
@@ -285,25 +282,35 @@ Currently we cannot route images to you, so only include this metric in your dec
         }
 
         qbox.appendChild(img);
+
+        const st = document.createElement('div');
+        st.textContent = "Post Accuracy Overview:";
+        st.style.zIndex = "2147483647";
+        st.style.fontWeight = "bold";
+        qbox.appendChild(st);
+
         qbox.appendChild(qbtext);
+
         qbox.appendChild(APB);
-        qbox.appendChild(AP);
+        APB.appendChild(AP);
+        //qbox.appendChild(AP);
 
         if (result.scamlikelypercent >= 0.6) {
             const st = document.createElement('div');
             st.textContent = "STOP! THIS POST MAY BE A SCAM: " + result.scamreason;
-            st.style.fontSize = "0.9375rem";
-            st.style.color = "black";
-            st.style.padding = "0.5rem";
             st.style.zIndex = "2147483647";
+            st.style.color = "red";
             qbox.appendChild(st);
         }
 
+        const st1 = document.createElement('div');
+        st1.textContent = "Account Credibility:";
+        st1.style.zIndex = "2147483647";
+        st1.style.fontWeight = "bold";
+        qbox.appendChild(st1);
+
         const bgc = document.createElement('div');
         bgc.textContent = result.backgroundcheck;
-        bgc.style.fontSize = "0.9375rem";
-        bgc.style.color = "black";
-        bgc.style.padding = "0.5rem";
         bgc.style.zIndex = "2147483647";
         qbox.appendChild(bgc);
 
