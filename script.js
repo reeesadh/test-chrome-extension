@@ -154,7 +154,7 @@ async function processPost(element) {
     window.addEventListener('resize', inDaClubStraightUpPositioningItAndByItLetsJustrSayMyButton);
     
     qb.addEventListener('click', async () => {
-        qb.textContent = "Loading...";
+        qb.textContent = "Snooping...";
 
         const text = await readPostText(element);
 
