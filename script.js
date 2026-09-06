@@ -155,9 +155,9 @@ Respond with exactly one JSON object of the following format:
 "summary": the summary of your reasoning,
 "sources": [the titles of your sources],
 "accuracy": your estimated accuracy of the post,
-"scam-likely-percent": your estimated scam likelihood of the post,
-"scam-reason": why the post is a scam if applicable
-"background-check": the person's profession and if they are actually licensed for what they are talking about in 20 words or less, if you cant find accurate info then just say "n/a"
+"scamlikelypercent": your estimated scam likelihood of the post,
+"scamreason": why the post is a scam if applicable
+"backgroundcheck": the person's profession and if they are actually licensed for what they are talking about in 20 words or less, if you cant find accurate info then just say "n/a"
 } 
 "accuracy" should be a number between 0 and 1, where 1 means all significant factual claims are accurate and 0 means none are accurate.
 
@@ -199,6 +199,9 @@ Post:
             summary: "API request failed!",
             sources: [],
             accuracy: 0.0,
+            scamlikelypercent: 0.0,
+            scamlikelyreason: "n/a",
+            backgroundcheck: "n/a",
         };
         
         filteredImages.forEach(async (imageObj) => {
@@ -273,9 +276,9 @@ Post:
         qbox.appendChild(APB);
         qbox.appendChild(AP);
 
-        if (result.scam-likely-percent >= 0.6) {
+        if (result.scamlikelypercent >= 0.6) {
             const st = document.createElement('div');
-            st.textContent = "STOP! THIS POST MAY BE A SCAM: " + result.scam-reason;
+            st.textContent = "STOP! THIS POST MAY BE A SCAM: " + result.scamreason;
             st.style.fontSize = "0.9375rem";
             st.style.color = "black";
             st.style.padding = "0.5rem";
@@ -284,7 +287,7 @@ Post:
         }
 
         const bgc = document.createElement('div');
-        bgc.textContent = result.background-check;
+        bgc.textContent = result.backgroundcheck;
         bgc.style.fontSize = "0.9375rem";
         bgc.style.color = "black";
         bgc.style.padding = "0.5rem";
