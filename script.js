@@ -156,6 +156,17 @@ async function processPost(element) {
     qb.addEventListener('click', async () => {
         qb.textContent = "Loading...";
 
+        let AITotal = 0
+        for (const imageObj of filteredImages) {
+            let SEResult = await chrome.runtime.sendMessage({
+                type: "SE_REQUEST",
+                image: imageObj.src
+            });
+            let parsedAIPercent = parseInt(SEResult.content);
+            AITotal += parsedAIPercent;
+        }
+        const AIPercent = AITotal / filteredImages.length;
+
         const text = await readPostText(element);
         const profile_elem = header.querySelector('div[data-ad-rendering-role="profile_name"] a');
         const name = profile_elem.textContent;
@@ -191,41 +202,34 @@ Name: ${name}
 Profile: ${profile}
 `
 
+        if (filteredImages.length > 0) {
+            prompt += `
+${filteredImages.length} image(s) were attached, with ${AIPercent}% likelihood of being AI-generated.
+Currently we cannot route images to you, so only include this metric in your decision if you know it may be relevant despite not seeing them.`;
+        }
+
         let result = await chrome.runtime.sendMessage({
             type: "OPENROUTER_REQUEST",
             prompt,
         });
 
-        // function parseRes(content) {
-        //     let cleaned = content.trim();
-        
-        //     cleaned = cleaned.replace(/^```(?:json)?\s*/i, "").replace(/\s*```$/i, "")
-        //     return JSON.parse(cleaned)
-        // }
-
-        // result = result.success ? parseRes(result.content) : {
-        //     summary: "API request failed!",
-        //     sources: [],
-        //     accuracy: 0.0,
-        //     scamlikelypercent: 0.0,
-        //     scamlikelyreason: "n/a",
-        //     backgroundcheck: "n/a",
-        // };
-        let AITotal = 0
-        for (const imageObj of filteredImages) {
-            let SEResult = await chrome.runtime.sendMessage({
-                type: "SE_REQUEST",
-                image: imageObj.src
-            })
-            let parsedAIPercent = parseInt(SEResult.content)
-            AITotal += parsedAIPercent
-            console.log("Percent AI: " + parsedAIPercent)
+        function parseRes(content) {
+            let cleaned = content.trim();
+            cleaned = cleaned.replace(/^```(?:json)?\s*/i, "").replace(/\s*```$/i, "");
+            return JSON.parse(cleaned);
         }
-        const AIPercent = AITotal / filteredImages.length;
-        
+
+        result = result.success ? parseRes(result.content) : {
+            summary: "API request failed!",
+            sources: [],
+            accuracy: 0.0,
+            scamlikelypercent: 0.0,
+            scamlikelyreason: "n/a",
+            backgroundcheck: "n/a",
+        };
 
         const qbox = document.createElement('div');
-        //qbox.textContent = result.summary;
+        qbox.textContent = result.summary;
         qbox.style.backgroundColor = "white";
         qbox.style.fontSize = "0.9375rem";
         qbox.style.width = "16rem";
