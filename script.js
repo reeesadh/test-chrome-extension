@@ -114,15 +114,22 @@ async function processPost(element) {
     console.log("ELEMENT: " + element);
     console.log("POSITION: " + element.style.top);
 
-    const qb = document.createElement('div');
+    const qb = document.createElement('button');
     qb.textContent = "?";
-    qb.style.fontSize = "3rem";
-    qb.style.color = "black";
+    qb.style.fontSize = "2rem";
+    qb.style.display = "flex";
+    qb.style.flexDirection = "column";
+    qb.style.justifyContent = "center";
+    qb.style.textAlign = "center";
+    qb.style.width = "3rem";
+    qb.style.height = "3rem";
+    qb.style.color = "#65686C";
     qb.style.position = "fixed";
     qb.style.backgroundColor = "white";
     qb.style.borderRadius = "0.75rem";
-    qb.style.padding = "0.5rem";
-    qb.style.boxShadow = "0px 2px 2px rgba(0, 0, 0, 0.5)";
+    qb.style.boxShadow = "0px 1px 2px rgba(0, 0, 0, 0.25)";
+    qb.style.outline = "none";
+    qb.style.border = "none";
 
     const baseInstructions = `Infer the main claims of the following post, and determine the overall factual accuracy of the post.
 
@@ -147,7 +154,7 @@ Post:
 
     function inDaClubStraightUpPositioningItAndByItLetsJustrSayMyButton() {
         const rect = full.getBoundingClientRect();
-        qb.style.top = (rect.top + 10) + "px";
+        qb.style.top = rect.top + "px";
         qb.style.left = (rect.right + 8) + "px";
     }
 
@@ -159,6 +166,8 @@ Post:
     window.addEventListener('resize', inDaClubStraightUpPositioningItAndByItLetsJustrSayMyButton);
 
     qb.addEventListener('click', async () => {
+        console.log("yo");
+
         const extractedText = baseInstructions + text;
 
         let result = await chrome.runtime.sendMessage({
@@ -181,11 +190,12 @@ Post:
         const qbox = document.createElement('div');
         qbox.textContent = result.summary;
         qbox.style.backgroundColor = "white";
+        qbox.style.fontSize = "0.9375rem";
         qbox.style.width = "16rem";
         qbox.style.height = "25rem";
         qbox.style.borderRadius = "0.75rem";
         qbox.style.color = "black";
-        qbox.style.boxShadow = "0px 2px 2px rgba(0, 0, 0, 0.5)";
+        qbox.style.boxShadow = "0px 1px 2px rgba(0, 0, 0, 0.25)";
         qbox.style.padding = "0.5rem";
         qbox.style.position = "fixed";
         qbox.style.zIndex = "2147483647";
