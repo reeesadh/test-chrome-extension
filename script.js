@@ -169,11 +169,30 @@ async function processPost(element) {
         }
         const AIPercent = AITotal / filteredImages.length;
 
-        const profile_elem = header.querySelector('div[data-ad-rendering-role="profile_name"] a');
-        const name = profile_elem.textContent;
-        const profile_dirty = new URL(profile_elem.href);
-        profile_dirty.search = '';
-        const profile = profile_dirty.toString();
+        function cleanURL(url) {
+            let dirty = new URL(url);
+            dirty.search = '';
+            return dirty.toString();
+        }
+
+        const profile_elem_upper_div = header.querySelector('div[data-ad-rendering-role="profile_name"]');
+        const profile_elem = profile_elem_upper_div.querySelector('a');
+        let profile_name = profile_elem.textContent;
+        let profile_link = cleanURL(profile_elem.href);
+
+        const other_links_upper_div = profile_elem_upper_div?.parentNode?.parentNode?.parentNode?.childNodes?.[1];
+        const other_links = other_links_upper_div.querySelectorAll('a');
+        const maybe_profile = other_links[0];
+        const date = other_links[other_links.length - 1].textContent;
+        
+        let group_name = '';
+        let group_link = '';
+        if (profile_link.indexOf('groups') !== -1) {
+            group_name = profile_name;
+            group_link = profile_link;
+            profile_name = maybe_profile.textContent;
+            profile_link = cleanURL(maybe_profile.href);
+        }
 
         let prompt = `Infer the main claims of the following post, and determine the overall factual accuracy of the post.
 
@@ -198,16 +217,31 @@ Respond with exactly one JSON object of the following format:
 
 Post: ${text}
 
-Name: ${name}
+Post Date: ${date}
 
-Profile: ${profile}
+Current Date: ${Date.now().toLocaleString()}
+
+User Name: ${profile_name}
+
+User Link: ${profile_link}
 `
+
+        if (group_name !== '') {
+            prompt += `
+Group Name: ${group_name}
+
+Group Link: ${group_link}
+`
+        }
 
         if (filteredImages.length > 0) {
             prompt += `
 ${filteredImages.length} image(s) were attached, with ${AIPercent}% likelihood of being AI-generated.
-Currently we cannot route images to you, so only include this metric in your decision if you know it may be relevant despite not seeing them.`;
+Currently we cannot route images to you, so only include this metric in your decision if you know it may be relevant despite not seeing them.
+`
         }
+
+        console.log(prompt);
 
         let result = await chrome.runtime.sendMessage({
             type: "OPENROUTER_REQUEST",
