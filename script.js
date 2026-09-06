@@ -32,11 +32,13 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
 async function readPostText(element) {
     let text = "";
+    let noMoreClick = false;
 
     // open full post text if "See more" button is visible
     let button = element.querySelector('div[role="button"]');
-    if (button != null) {
+    if (button != null && !noMoreClick) {
         button.click();
+        noMoreClick = true;
 
         function wait(e) {
             return new Promise((resolve) => {
@@ -117,11 +119,20 @@ async function processPost(element) {
 
     if (pId) {
         if (alreadyProcessed.has(pId)) return;
+    } else {
+        if (element.dataset.scanned) return;
     }
 
     const text = await readPostText(element);
 
+    console.log("ELEMENT: " + element);
+    console.log("POSITION: " + element.style.top);
+
     element.style.backgroundColor = "red";
+
+    const qb = document.createElement('div');
+    qb.textContent = "hi";
+    qb.style.position = "absolute";
 
     header.querySelectorAll(['a[role="link"]']).forEach((link) => {
         console.log(link.textContent);
@@ -145,17 +156,35 @@ function scheduleUpdate() {
 
 async function runUpdate() {
     for (const element of document.querySelectorAll(['div[data-ad-rendering-role="story_message"]'])) {
-        try {
-            await processPost(element);
-        } catch (e) {
-            console.error(e);
+        if (!element.dataset.watching) {
+            element.dataset.watching = "true";
+            visibilityObserver.observe(element);
         }
+        // try {
+        //     await processPost(element);
+        // } catch (e) {
+        //     console.error(e);
+        // }
     }
 }
 
 const observer = new MutationObserver(async (mutations, obs) => {
     scheduleUpdate();
 });
+
+const visibilityObserver = new IntersectionObserver((entries, obs) => {
+    for (const en of entries) {
+        if (en.isIntersecting) {
+            const element = en.target;
+            obs.unobserve(element);
+            processPost(element).catch((er) => console.error(er));
+        }
+    }
+    }, {
+        root: null,
+        threshold: 0.1
+    }
+);
 
 const config = { 
     attributes: true, 
