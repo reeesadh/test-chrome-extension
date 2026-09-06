@@ -155,7 +155,7 @@ Post:
     function inDaClubStraightUpPositioningItAndByItLetsJustrSayMyButton() {
         const rect = full.getBoundingClientRect();
         qb.style.top = rect.top + "px";
-        qb.style.left = (rect.right + 8) + "px";
+        qb.style.left = (rect.right + 12) + "px";
     }
 
     inDaClubStraightUpPositioningItAndByItLetsJustrSayMyButton();
@@ -184,15 +184,17 @@ Post:
 
         console.log(result.content);
 
-        result = result.success ? parseRes(result.content) : null;
-        if (result == null) console.log("ah hell naw");
+        result = result.success ? parseRes(result.content) : {
+            summary: "API request failed!",
+            sources: [],
+            accuracy: 0.0,
+        };
 
         const qbox = document.createElement('div');
         qbox.textContent = result.summary;
         qbox.style.backgroundColor = "white";
         qbox.style.fontSize = "0.9375rem";
         qbox.style.width = "16rem";
-        qbox.style.height = "25rem";
         qbox.style.borderRadius = "0.75rem";
         qbox.style.color = "black";
         qbox.style.boxShadow = "0px 1px 2px rgba(0, 0, 0, 0.25)";
@@ -210,8 +212,8 @@ Post:
 
         function inDaClubStraightUpPositioningItAndByItLetsJustrSayMyButton() {
             const rect = full.getBoundingClientRect();
-            qbox.style.top = (rect.top + -2) + "px";
-            qbox.style.left = (rect.right + 8) + "px";
+            qbox.style.top = rect.top + "px";
+            qbox.style.left = (rect.right + 12) + "px";
         }
 
         inDaClubStraightUpPositioningItAndByItLetsJustrSayMyButton();
