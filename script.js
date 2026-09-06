@@ -28,33 +28,28 @@ async function readPostText(element) {
 
         function wait(e) {
             return new Promise((resolve) => {
-                let alreadyResolvedLowk = false;
+                let resolved = false;
 
                 const observer = new MutationObserver((mutations, obs) => {
-                    if (alreadyResolvedLowk) return;
-
-                    alreadyResolvedLowk = true;
-
+                    if (resolved) return;
+                    resolved = true;
                     obs.disconnect();
                     resolve();
                 });
-
                 const config = { 
                     attributes: true, 
                     childList: true, 
                     subtree: true 
                 };
-
                 observer.observe(e, config);
 
                 // resolve if taking too long
                 setTimeout(() => {
-                    if (alreadyResolvedLowk) return;
-                    alreadyResolvedLowk = true;
+                    if (resolved) return;
+                    resolved = true;
                     observer.disconnect();
                     resolve();
                 }, 1500);
-
             });
         }
 
@@ -109,11 +104,6 @@ async function processPost(element) {
         if (element.dataset.scanned) return;
     }
 
-    const text = await readPostText(element);
-
-    console.log("ELEMENT: " + element);
-    console.log("POSITION: " + element.style.top);
-
     const qb = document.createElement('button');
     qb.textContent = "?";
     qb.style.fontSize = "2rem";
@@ -166,13 +156,14 @@ Post:
     window.addEventListener('resize', inDaClubStraightUpPositioningItAndByItLetsJustrSayMyButton);
 
     qb.addEventListener('click', async () => {
-        console.log("yo");
+        qb.textContent = "Loading...";
 
+        const text = await readPostText(element);
         const extractedText = baseInstructions + text;
 
         let result = await chrome.runtime.sendMessage({
-        type: "OPENROUTER_REQUEST",
-        prompt: extractedText
+            type: "OPENROUTER_REQUEST",
+            prompt: extractedText
         });
 
         function parseRes(content) {
@@ -181,8 +172,6 @@ Post:
             cleaned = cleaned.replace(/^```(?:json)?\s*/i, "").replace(/\s*```$/i, "")
             return JSON.parse(cleaned)
         }
-
-        console.log(result.content);
 
         result = result.success ? parseRes(result.content) : {
             summary: "API request failed!",
@@ -209,6 +198,26 @@ Post:
         qbox.style.position = "fixed";
         qbox.style.zIndex = "2147483647";
 
+        const APB = document.createElement('div');
+        APB.style.fontSize = "50px";
+        APB.style.zIndex = "2147483647";
+        APB.style.backgroundColor = "gray";
+        APB.style.width = "200px";
+        APB.style.height = "50px";
+        APB.style.position = "absolute";
+
+        const AP = document.createElement('div');
+        AP.textContent = result.accuracy * 100 + "%";
+        AP.style.fontSize = "50px";
+        AP.style.zIndex = "2147483647";
+        AP.style.backgroundColor = "red";
+        AP.style.width = 200*result.accuracy + "px";
+        AP.style.height = "50px";
+        AP.style.position = "relative";
+
+        qbox.appendChild(APB);
+        qbox.appendChild(AP);
+
         const img = document.createElement('img');
         img.src = "https://snoopy.basil.moe/logo.png";
         img.alt = "question"
@@ -227,19 +236,14 @@ Post:
 
         full.style.position = "relative";
         full.appendChild(qbox);
+        qb.remove();
 
         window.addEventListener('scroll', inDaClubStraightUpPositioningItAndByItLetsJustrSayMyButton, {passive: true});
         window.addEventListener('resize', inDaClubStraightUpPositioningItAndByItLetsJustrSayMyButton);
-    });
+    }, { once: true });
 
     full.style.position = "relative";
     full.appendChild(qb);
-
-    header.querySelectorAll(['a[role="link"]']).forEach((link) => {
-        console.log(link.textContent);
-    });
-    
-    console.log("POST TEXT: " + text);
 
     if (pId) {
         alreadyProcessed.add(pId);
