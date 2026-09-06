@@ -111,7 +111,7 @@ async function processPost(element) {
     qb.style.flexDirection = "column";
     qb.style.justifyContent = "center";
     qb.style.textAlign = "center";
-    qb.style.width = "3rem";
+    qb.style.minWidth = "3rem";
     qb.style.height = "3rem";
     qb.style.color = "#65686C";
     qb.style.position = "fixed";
@@ -130,7 +130,7 @@ Research the claims using reliable sources. Distinguish between:
 3. Claims that are factual
 4. Claims
 
-Then give an extremely concise summary of your reasoning in under 100 words, and with enough simplicity for middle school comprehension. List any sources you used to reach your conclusion (this may fall beyond the word limit)
+Then give an extremely concise summary of your reasoning in under 50 words, and with enough simplicity for middle school comprehension. List any sources you used to reach your conclusion (this may fall beyond the word limit)
 Respond with exactly one JSON object of the following format: 
 {
 "summary": the summary of your reasoning,
@@ -187,7 +187,7 @@ Post:
         console.log(SEResult)
 
         const qbox = document.createElement('div');
-        qbox.textContent = result.summary;
+        //qbox.textContent = result.summary;
         qbox.style.backgroundColor = "white";
         qbox.style.fontSize = "0.9375rem";
         qbox.style.width = "16rem";
@@ -198,25 +198,12 @@ Post:
         qbox.style.position = "fixed";
         qbox.style.zIndex = "2147483647";
 
-        const APB = document.createElement('div');
-        APB.style.fontSize = "50px";
-        APB.style.zIndex = "2147483647";
-        APB.style.backgroundColor = "gray";
-        APB.style.width = "200px";
-        APB.style.height = "50px";
-        APB.style.position = "absolute";
-
-        const AP = document.createElement('div');
-        AP.textContent = result.accuracy * 100 + "%";
-        AP.style.fontSize = "50px";
-        AP.style.zIndex = "2147483647";
-        AP.style.backgroundColor = "red";
-        AP.style.width = 200*result.accuracy + "px";
-        AP.style.height = "50px";
-        AP.style.position = "relative";
-
-        qbox.appendChild(APB);
-        qbox.appendChild(AP);
+        const qbtext = document.createElement('div');
+        qbtext.textContent = result.summary;
+        qbtext.style.fontSize = "0.9375rem";
+        qbtext.style.color = "black";
+        qbtext.style.padding = "0.5rem";
+        qbtext.style.zIndex = "2147483647";
 
         const img = document.createElement('img');
         img.src = "https://snoopy.basil.moe/logo.png";
@@ -224,7 +211,43 @@ Post:
         img.style.zIndex = "2147483647";
         img.style.width = "200px";
         img.style.height = "100px";
+
+        const APB = document.createElement('div');
+        APB.style.fontSize = "50px";
+        APB.style.zIndex = "2147483647";
+        APB.style.backgroundColor = "#89a9cc";
+        APB.style.width = "240px";
+        APB.style.height = "40px";
+        APB.style.borderRadius = "10px";
+        APB.style.position = "absolute";
+        APB.style.margin = "5px";
+
+        const AP = document.createElement('div');
+        AP.textContent = result.accuracy * 100 + "%";
+        AP.style.textAlign = "center";
+        AP.style.fontSize = "26px";
+        AP.style.zIndex = "2147483647";
+        AP.style.borderRadius = "10px";
+        AP.style.backgroundColor = "#0064D1";
+        AP.style.width = 240*result.accuracy + "px";
+        AP.style.height = "40px";
+        AP.style.position = "relative";
+        AP.style.margin = "5px";
+
+        if (result.accuracy >= 0.50) {
+            APB.style.backgroundColor = "#abc9a9";
+            AP.style.backgroundColor = "#4dbf45";
+        } else {
+            APB.style.backgroundColor = "#bd9d9d";
+            AP.style.backgroundColor = "#bf4545";
+        }
+
         qbox.appendChild(img);
+        qbox.appendChild(qbtext);
+        qbox.appendChild(APB);
+        qbox.appendChild(AP);
+
+        
 
         function inDaClubStraightUpPositioningItAndByItLetsJustrSayMyButton() {
             const rect = full.getBoundingClientRect();
