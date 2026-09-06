@@ -140,7 +140,30 @@ async function processPost(element) {
     qb.style.outline = "none";
     qb.style.border = "none";
 
-    const baseInstructions = `Infer the main claims of the following post, and determine the overall factual accuracy of the post.
+    function inDaClubStraightUpPositioningItAndByItLetsJustrSayMyButton() {
+        const rect = full.getBoundingClientRect();
+        qb.style.top = rect.top + "px";
+        qb.style.left = (rect.right + 12) + "px";
+    }
+
+    inDaClubStraightUpPositioningItAndByItLetsJustrSayMyButton();
+
+    qb.style.zIndex = "2147483646";
+
+    window.addEventListener('scroll', inDaClubStraightUpPositioningItAndByItLetsJustrSayMyButton, {passive: true});
+    window.addEventListener('resize', inDaClubStraightUpPositioningItAndByItLetsJustrSayMyButton);
+    
+    qb.addEventListener('click', async () => {
+        qb.textContent = "Loading...";
+
+        const text = await readPostText(element);
+        const profile_elem = header.querySelector('div[data-ad-rendering-role="profile_name"] a');
+        const name = profile_elem.textContent;
+        const profile_dirty = new URL(profile_elem.href);
+        profile_dirty.search = '';
+        const profile = profile_dirty.toString();
+
+        const prompt = `Infer the main claims of the following post, and determine the overall factual accuracy of the post.
 
 Research the claims using reliable sources. Distinguish between:
 
@@ -161,32 +184,17 @@ Respond with exactly one JSON object of the following format:
 } 
 "accuracy" should be a number between 0 and 1, where 1 means all significant factual claims are accurate and 0 means none are accurate.
 
-Post:
+Post: ${text}
+
+Name: ${name}
+
+Profile: ${profile}
 `
 
-    function inDaClubStraightUpPositioningItAndByItLetsJustrSayMyButton() {
-        const rect = full.getBoundingClientRect();
-        qb.style.top = rect.top + "px";
-        qb.style.left = (rect.right + 12) + "px";
-    }
-
-    inDaClubStraightUpPositioningItAndByItLetsJustrSayMyButton();
-
-    qb.style.zIndex = "2147483646";
-
-    window.addEventListener('scroll', inDaClubStraightUpPositioningItAndByItLetsJustrSayMyButton, {passive: true});
-    window.addEventListener('resize', inDaClubStraightUpPositioningItAndByItLetsJustrSayMyButton);
-    
-    qb.addEventListener('click', async () => {
-        qb.textContent = "Loading...";
-
-        const text = await readPostText(element);
-        const extractedText = baseInstructions + text;
-
-        // let result = await chrome.runtime.sendMessage({
-        //     type: "OPENROUTER_REQUEST",
-        //     prompt: extractedText
-        // });
+        let result = await chrome.runtime.sendMessage({
+            type: "OPENROUTER_REQUEST",
+            prompt,
+        });
 
         // function parseRes(content) {
         //     let cleaned = content.trim();
