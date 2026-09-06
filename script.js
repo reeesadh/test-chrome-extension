@@ -157,7 +157,7 @@ async function processPost(element) {
         img.style.zIndex = "2147483647";
         img.style.width = "30px";
         img.style.height = "30px";
-        qb.appendChild(img);
+        qbox.appendChild(img);
 
         function inDaClubStraightUpPositioningItAndByItLetsJustrSayMyButton() {
             const rect = full.getBoundingClientRect();
