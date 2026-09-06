@@ -196,6 +196,27 @@ Post:
         qbox.style.position = "fixed";
         qbox.style.zIndex = "2147483647";
 
+        const APB = document.createElement('div');
+        APB.style.fontSize = "50px";
+        APB.style.zIndex = "2147483647";
+        APB.style.backgroundColor = "gray";
+        APB.style.width = "200px";
+        APB.style.height = "50px";
+        APB.style.position = "absolute";
+
+        const AP = document.createElement('div');
+        AP.textContent = result.accuracy * 100 + "%";
+        console.log(result.accuracy);
+        AP.style.fontSize = "50px";
+        AP.style.zIndex = "2147483647";
+        AP.style.backgroundColor = "red";
+        AP.style.width = 200*result.accuracy + "px";
+        AP.style.height = "50px";
+        AP.style.position = "relative";
+
+        qbox.appendChild(APB);
+        qbox.appendChild(AP);
+
         const img = document.createElement('img');
         img.src = "https://snoopy.basil.moe/logo.png";
         img.alt = "question"
