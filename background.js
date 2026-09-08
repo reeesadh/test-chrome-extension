@@ -13,7 +13,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         for (const img of message.images) {
           content.push({
             type: 'image_url',
-            imageUrl: { url: 'img' },
+            imageUrl: { url: img },
           });
         }
 
