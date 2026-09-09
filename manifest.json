@@ -31,6 +31,6 @@
   },
   "action": {
     "default_popup": "popup.html",
-    "default_icon": "pencil.png"
+    "default_icon": "vham.png"
   }
 }
